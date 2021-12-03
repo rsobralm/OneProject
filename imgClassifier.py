@@ -18,20 +18,20 @@ validation_data_path = 'data/test'
 
 
 ################################## TRAINING #########################################
-epochs = 20
+epochs = 5
 
 
 #Parameters
 img_width, img_height = 150, 150
-batch_size = 32
-samples_per_epoch = 1000
+batch_size = 5
+samples_per_epoch = 100
 validation_steps = 300
 nb_filters1 = 32
 nb_filters2 = 64
 conv1_size = 3
 conv2_size = 2
 pool_size = 2
-classes_num = 2
+classes_num = 28
 lr = 0.0004
 
 
@@ -107,7 +107,7 @@ def predict(file):
 
   return answer
 
-
+'''
 for i, ret in enumerate(os.walk(test_path)):
   for i, filename in enumerate(ret[2]):
     if filename.startswith("."):
@@ -115,4 +115,4 @@ for i, ret in enumerate(os.walk(test_path)):
     
     print(ret[0] + '/' + filename)
     result = predict(ret[0] + '/' + filename)
-    print(" ")
+    print(" ")'''
