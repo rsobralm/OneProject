@@ -10,20 +10,23 @@ from keras.models import Sequential
 from keras.layers import Dropout, Flatten, Dense, Activation
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras import callbacks
+from keras.applications.vgg16 import VGG16
+
+import sklearn.metrics as metrics
 
 
-train_data_path = 'data/train'
-validation_data_path = 'data/test'
+train_data_path = 'data/newtrain'
+validation_data_path = 'data/newtest'
 
 
 
 ################################## TRAINING #########################################
-epochs = 5
+epochs = 20
 
 
 #Parameters
 img_width, img_height = 150, 150
-batch_size = 5
+batch_size = 32
 samples_per_epoch = 100
 validation_steps = 300
 nb_filters1 = 32
@@ -31,11 +34,12 @@ nb_filters2 = 64
 conv1_size = 3
 conv2_size = 2
 pool_size = 2
-classes_num = 28
+classes_num = 7
 lr = 0.0004
 
 
 model = Sequential()
+
 model.add(Convolution2D(nb_filters1, conv1_size, conv1_size, padding ="same", input_shape=(img_width, img_height, 3)))
 model.add(Activation("relu"))
 model.add(MaxPooling2D(pool_size=(pool_size, pool_size)))
@@ -82,6 +86,29 @@ model.fit(
     epochs=epochs,
     validation_data=validation_generator,
     validation_steps=validation_steps)
+
+
+predictions = model.predict(validation_generator)
+# Get most likely class
+predicted_classes = np.argmax(predictions, axis=1)
+print(len(predicted_classes))
+print(predicted_classes)
+
+true_classes = validation_generator.classes
+class_labels = list(validation_generator.class_indices.keys())
+
+#print(true_classes)
+
+#print(testdata)
+
+report = metrics.classification_report(true_classes, predicted_classes, target_names=class_labels)
+print(report)    
+
+confusion_matrix = metrics.confusion_matrix(y_true=true_classes, y_pred=predicted_classes)
+print(confusion_matrix) 
+print("Accuracy: ", metrics.accuracy_score(true_classes, predicted_classes))
+print("Precision: ", metrics.precision_score(true_classes, predicted_classes, average='micro'))
+
 
 
 ################################## TESTING #########################################
